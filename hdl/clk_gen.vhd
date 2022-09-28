@@ -43,7 +43,7 @@ begin
     if rst_n = '0' then
       counter <= (others => '0');
     elsif rising_edge(clk) then
-      counter <= to_unsigned(to_integer(counter) + 1, 25);
+      counter <= counter + 1;
     end if;
   end process;
 

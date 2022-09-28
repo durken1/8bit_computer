@@ -19,7 +19,7 @@ begin
   clk_gen_inst : work.clk_gen
   port map(
     clk          => clk,
-    clk_man      => key(0),
+    clock_man    => key(0),
     clock_switch => switch(0),
     rst_n        => rst_n,
     clk_o        => led(0)
