@@ -1,0 +1,6 @@
+.vscode/*
+db/*
+incremental_db/*
+output_files/*
+simulation/*
+8bit_computer.*
