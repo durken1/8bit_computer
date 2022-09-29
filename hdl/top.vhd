@@ -14,15 +14,27 @@ end entity top;
 
 architecture rtl of top is
 
+  component clk_gen
+    port (
+      clk          : in std_logic;
+      rst_n        : in std_logic;
+      halt         : in std_logic;
+      clock_man    : in std_logic;
+      clock_switch : in std_logic_vector(1 downto 0);
+      clock_o      : out std_logic
+    );
+  end component;
+
 begin
 
-  clk_gen_inst : work.clk_gen
+  clk_gen_inst : clk_gen
   port map(
     clk          => clk,
     clock_man    => key(0),
+    halt         => switch(2),
     clock_switch => switch(1 downto 0),
     rst_n        => rst_n,
-    clk_o        => led(0)
+    clock_o      => led(0)
   );
 
 end architecture;
