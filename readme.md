@@ -4,8 +4,8 @@ A small project where I try to implement Ben Eater's 8 bit bread board computer 
 
 ## Todo:
  * ~~Clock generator~~
- * Register
- * ALU
+ * ~~Register~~
+ * ~~ALU~~
  * RAM
  * PC
  * 7-Seg
