@@ -20,7 +20,7 @@ begin
   port map(
     clk          => clk,
     clock_man    => key(0),
-    clock_switch => switch(0),
+    clock_switch => switch(1 downto 0),
     rst_n        => rst_n,
     clk_o        => led(0)
   );
