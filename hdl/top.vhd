@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use work.data_types.all;
 
 entity top is
   port (
@@ -18,6 +19,7 @@ architecture rtl of top is
   -- SIGNALS
   --------------------------------------
 
+  -- Meta stabilization
   signal rst_n_s1  : std_logic;
   signal rst_n_s2  : std_logic;
   signal switch_s1 : std_logic_vector(8 downto 0);
@@ -25,9 +27,22 @@ architecture rtl of top is
   signal key_s1    : std_logic_vector (1 downto 0);
   signal key_s2    : std_logic_vector (1 downto 0);
 
+  -- alu control
+  signal alu_eo : std_logic;
+  signal alu_su : std_logic;
+
+  -- register control
+  signal ld_regA : std_logic;
+  signal ld_regB : std_logic;
+  signal ld_regI : std_logic;
+
+  -- bus control
+  signal q_sel  : output_en;
+  signal bus0   : std_logic_vector(7 downto 0);
   signal q_regA : std_logic_vector(7 downto 0);
   signal q_regB : std_logic_vector(7 downto 0);
   signal q_regI : std_logic_vector(7 downto 0);
+  signal q_alu  : std_logic_vector(7 downto 0);
 
   --------------------------------------
   -- COMPONENTS
@@ -54,6 +69,27 @@ architecture rtl of top is
     );
   end component;
 
+  component alu
+    port (
+      clk   : in std_logic;
+      rst_n : in std_logic;
+      regA  : in std_logic_vector(7 downto 0);
+      regB  : in std_logic_vector(7 downto 0);
+      eo    : in std_logic;
+      su    : in std_logic;
+      q     : out std_logic_vector(7 downto 0)
+    );
+  end component;
+
+  component output_sel
+    port (
+      clk   : in std_logic;
+      rst_n : in std_logic;
+      sel   : in std_logic_vector(2 downto 0);
+      q_sel : out output_en
+    );
+  end component;
+
 begin
 
   --------------------------------------
@@ -73,28 +109,47 @@ begin
   regA_inst : reg
   port map(
     clk   => clk,
-    rst_n => rst_n,
-    ld_n  => '0',
-    d     => x"00",
+    rst_n => rst_n_s2,
+    ld_n  => ld_regA,
+    d     => bus0,
     q     => q_regA
   );
 
   regB_inst : reg
   port map(
     clk   => clk,
-    rst_n => rst_n,
-    ld_n  => '0',
-    d     => x"00",
+    rst_n => rst_n_s2,
+    ld_n  => ld_regB,
+    d     => bus0,
     q     => q_regB
   );
 
   regI_inst : reg
   port map(
     clk   => clk,
-    rst_n => rst_n,
-    ld_n  => '0',
-    d     => x"00",
+    rst_n => rst_n_s2,
+    ld_n  => ld_regI,
+    d     => bus0,
     q     => q_regI
+  );
+
+  alu_inst : alu
+  port map(
+    clk   => clk,
+    rst_n => rst_n_s2,
+    regA  => q_regA,
+    regB  => q_regB,
+    eo    => alu_eo,
+    su    => alu_su,
+    q     => q_alu
+  );
+
+  output_sel_inst : output_sel
+  port map(
+    clk   => clk,
+    rst_n => rst_n,
+    sel   => switch(8 downto 6),
+    q_sel => q_sel
   );
 
   --------------------------------------
@@ -120,5 +175,18 @@ begin
       switch_s2 <= switch_s1;
     end if;
   end process;
+
+  --------------------------------------
+  -- BUS
+  --------------------------------------
+
+  with q_sel select bus0 <=
+    q_regA when regA_o,
+    q_regB when regB_o,
+    q_regI when regI_o,
+    q_alu when alu_o,
+    x"00" when others;
+
+  led(9 downto 2) <= bus0;
 
 end architecture;
