@@ -1,6 +1,6 @@
 # Simple 8 bit computer written in VHDL
 
-A small project where I try to implement Ben Eater's 8 bit bread board computer in VHDL on a DE10-Lite FPGA development board.
+A small project where I try to construct a simple 8 bit computer in VHDL on a DE10-Lite FPGA development board.
 
 ## Todo:
  * ~~Clock generator~~
