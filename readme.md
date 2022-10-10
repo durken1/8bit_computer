@@ -6,7 +6,7 @@ A small project where I try to implement Ben Eater's 8 bit bread board computer 
  * ~~Clock generator~~
  * ~~Register~~
  * ~~ALU~~
- * RAM
+ * ~~RAM~~
  * PC
  * 7-Seg
  * Decimal display
