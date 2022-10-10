@@ -27,22 +27,28 @@ architecture rtl of top is
   signal key_s1    : std_logic_vector (1 downto 0);
   signal key_s2    : std_logic_vector (1 downto 0);
 
-  -- alu control
+  -- alu 
   signal alu_eo : std_logic;
   signal alu_su : std_logic;
 
-  -- register control
+  -- register 
   signal ld_regA : std_logic;
   signal ld_regB : std_logic;
   signal ld_regI : std_logic;
 
-  -- bus control
+  -- bus
   signal q_sel  : output_en;
   signal bus0   : std_logic_vector(7 downto 0);
   signal q_regA : std_logic_vector(7 downto 0);
   signal q_regB : std_logic_vector(7 downto 0);
   signal q_regI : std_logic_vector(7 downto 0);
   signal q_alu  : std_logic_vector(7 downto 0);
+
+  -- ram
+  signal ram_addr : std_logic_vector(3 downto 0);
+  signal ram_data : std_logic_vector(7 downto 0);
+  signal ram_we   : std_logic;
+  signal q_ram    : std_logic_vector(7 downto 0);
 
   --------------------------------------
   -- COMPONENTS
@@ -71,11 +77,21 @@ architecture rtl of top is
 
   component alu
     port (
-      regA  : in std_logic_vector(7 downto 0);
-      regB  : in std_logic_vector(7 downto 0);
-      eo    : in std_logic;
-      su    : in std_logic;
-      q     : out std_logic_vector(7 downto 0)
+      regA : in std_logic_vector(7 downto 0);
+      regB : in std_logic_vector(7 downto 0);
+      eo   : in std_logic;
+      su   : in std_logic;
+      q    : out std_logic_vector(7 downto 0)
+    );
+  end component;
+
+  component single_port_ram
+    port (
+      clk  : in std_logic;
+      addr : in std_logic_vector(3 downto 0);
+      data : in std_logic_vector(7 downto 0);
+      we   : in std_logic;
+      q    : out std_logic_vector(7 downto 0)
     );
   end component;
 
@@ -133,11 +149,11 @@ begin
 
   alu_inst : alu
   port map(
-    regA  => q_regA,
-    regB  => q_regB,
-    eo    => alu_eo,
-    su    => alu_su,
-    q     => q_alu
+    regA => q_regA,
+    regB => q_regB,
+    eo   => alu_eo,
+    su   => alu_su,
+    q    => q_alu
   );
 
   output_sel_inst : output_sel
@@ -146,6 +162,15 @@ begin
     rst_n => rst_n,
     sel   => switch(8 downto 6),
     q_sel => q_sel
+  );
+
+  single_port_ram_inst : single_port_ram
+  port map(
+    clk  => clk,
+    addr => ram_addr,
+    data => ram_data,
+    we   => ram_we,
+    q    => q_ram
   );
 
   --------------------------------------
@@ -181,6 +206,7 @@ begin
     q_regB when regB_o,
     q_regI when regI_o,
     q_alu when alu_o,
+    q_ram when ram_o,
     x"00" when others;
 
   led(9 downto 2) <= bus0;

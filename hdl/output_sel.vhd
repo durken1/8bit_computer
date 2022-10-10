@@ -33,6 +33,8 @@ begin
           q_sel <= regI_o;
           when "100" =>
           q_sel <= alu_o;
+          when "101" =>
+          q_sel <= ram_o;
         when others =>
           null;
       end case;

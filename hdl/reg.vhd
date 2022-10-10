@@ -35,9 +35,9 @@ begin
       if (ld_n = '0') then
         reg <= d;
       end if;
-    elsif falling_edge(clk) then
-      q <= reg;
     end if;
   end process;
+
+  q <= reg;
 
 end architecture;
