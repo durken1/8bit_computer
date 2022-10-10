@@ -71,8 +71,6 @@ architecture rtl of top is
 
   component alu
     port (
-      clk   : in std_logic;
-      rst_n : in std_logic;
       regA  : in std_logic_vector(7 downto 0);
       regB  : in std_logic_vector(7 downto 0);
       eo    : in std_logic;
@@ -135,8 +133,6 @@ begin
 
   alu_inst : alu
   port map(
-    clk   => clk,
-    rst_n => rst_n_s2,
     regA  => q_regA,
     regB  => q_regB,
     eo    => alu_eo,
