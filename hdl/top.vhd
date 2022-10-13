@@ -45,8 +45,6 @@ architecture rtl of top is
   signal q_alu  : std_logic_vector(7 downto 0);
 
   -- ram
-  signal ram_addr : std_logic_vector(3 downto 0);
-  signal ram_data : std_logic_vector(7 downto 0);
   signal ram_we   : std_logic;
   signal q_ram    : std_logic_vector(7 downto 0);
 
@@ -167,8 +165,8 @@ begin
   single_port_ram_inst : single_port_ram
   port map(
     clk  => clk,
-    addr => ram_addr,
-    data => ram_data,
+    addr => bus0(3 downto 0),
+    data => bus0,
     we   => ram_we,
     q    => q_ram
   );
