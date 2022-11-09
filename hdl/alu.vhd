@@ -27,7 +27,7 @@ begin
   regA_s <= signed(regA);
   regB_s <= signed(regB);
 
-  q <= std_logic_vector(q_s) when eo = '1';
+  q <= std_logic_vector(q_s) when eo = '1' else (others => '0');
 
   --------------------------------------
   -- PROCESS
