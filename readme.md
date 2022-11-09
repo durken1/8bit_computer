@@ -7,7 +7,7 @@ A small project where I try to construct a simple 8 bit computer in VHDL on a DE
  * ~~Register~~
  * ~~ALU~~
  * ~~RAM~~
- * PC
+ * ~~PC~~
  * 7-Seg
  * Decimal display
  * Control logic
